@@ -16,7 +16,7 @@ data class Game(private val grid: Grid) {
         }
         private val RULE_2 = object : Rule {
             override fun isApplicable(isActive: Boolean, activeNeighborCount: Int): Boolean =
-                isActive && listOf(2, 3).contains(activeNeighborCount)
+                isActive && (2..3).contains(activeNeighborCount)
 
             override fun apply() = true
         }
