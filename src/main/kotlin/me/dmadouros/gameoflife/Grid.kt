@@ -1,6 +1,6 @@
 package me.dmadouros.gameoflife
 
-data class Grid(val rows: List<List<Cell>>) {
+data class Grid(private val rows: List<List<Cell>>) {
     data class Offset(val x: Int, val y: Int)
 
     companion object {
@@ -17,12 +17,6 @@ data class Grid(val rows: List<List<Cell>>) {
             )
     }
 
-    fun getCell(point: Point): Cell? =
-        if (isInBounds(point))
-            rows[point.y][point.x]
-        else
-            null
-
     fun getNeighbors(point: Point): Sequence<Cell> =
         OFFSETS.asSequence().map { offset ->
             val neighborX = point.x + offset.x
@@ -32,12 +26,28 @@ data class Grid(val rows: List<List<Cell>>) {
         }
             .filterNotNull()
 
+    fun mapCells(fn: (point: Point, cell: Cell) -> Cell): Grid =
+        Grid(
+            rows.mapIndexed { y, row ->
+                row.mapIndexed { x, currentCell ->
+                    val currentPoint = Point(x, y)
+                    fn(currentPoint, currentCell)
+                }
+            }
+        )
+
     override fun toString(): String =
         rows.map { row ->
             row.map {
                 if (it.isActive()) "x" else "_"
             }
         }.joinToString("\n") { row -> row.joinToString("") }
+
+    private fun getCell(point: Point): Cell? =
+        if (isInBounds(point))
+            rows[point.y][point.x]
+        else
+            null
 
     private fun isInBounds(point: Point) =
         (point.y >= 0 && point.y < height()) && (point.x >= 0 && point.x < width())

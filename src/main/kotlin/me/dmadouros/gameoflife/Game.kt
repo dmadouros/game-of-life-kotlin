@@ -36,21 +36,15 @@ data class Game(private val grid: Grid) {
 
     fun tick(): Game =
         Game(
-            Grid(
-                grid.rows.mapIndexed { y, row ->
-                    row.mapIndexed { x, _ ->
-                        val currentPoint = Point(x, y)
-                        val currentCell = grid.getCell(currentPoint)!!
-                        val activeNeighborCount = countActiveNeighbors(currentPoint)
-                        // Shuffled. Because I can ;-)
-                        val nextState =
-                            RULES.shuffled().find { rule -> rule.isApplicable(currentCell.isActive(), activeNeighborCount) }
-                                ?.apply()
-                                ?: currentCell.state
-                        Cell(nextState)
-                    }
-                }
-            )
+            grid.mapCells { currentPoint, currentCell ->
+                val activeNeighborCount = countActiveNeighbors(currentPoint)
+                // Shuffled. Because I can ;-)
+                val nextState =
+                    RULES.shuffled().find { rule -> rule.isApplicable(currentCell.isActive(), activeNeighborCount) }
+                        ?.apply()
+                        ?: currentCell.state
+                Cell(nextState)
+            }
         )
 
     override fun toString() = grid.toString()
