@@ -1,7 +1,7 @@
 package me.dmadouros.gameoflife
 
 data class Grid(private val rows: List<List<Cell>>) {
-    data class Offset(val x: Int, val y: Int)
+    private data class Offset(val x: Int, val y: Int)
 
     companion object {
         private val OFFSETS =

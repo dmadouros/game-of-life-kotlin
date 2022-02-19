@@ -1,6 +1,12 @@
 package me.dmadouros.gameoflife
 
 data class Game(private val grid: Grid) {
+    private interface Rule {
+        fun isApplicable(isActive: Boolean, activeNeighborCount: Int): Boolean
+
+        fun apply(): Boolean
+    }
+
     companion object {
         private val RULE_1 = object : Rule {
             override fun isApplicable(isActive: Boolean, activeNeighborCount: Int): Boolean =
