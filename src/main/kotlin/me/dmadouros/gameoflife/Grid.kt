@@ -37,7 +37,7 @@ data class Grid(val rows: List<List<Cell>>) {
             row.map {
                 if (it.isActive()) "x" else "_"
             }
-        }.joinToString("\n") { row -> row.joinToString(", ") }
+        }.joinToString("\n") { row -> row.joinToString("") }
 
     private fun isInBounds(point: Point) =
         (point.y >= 0 && point.y < height()) && (point.x >= 0 && point.x < width())

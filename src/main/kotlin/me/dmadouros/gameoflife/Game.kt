@@ -42,8 +42,9 @@ data class Game(private val grid: Grid) {
                         val currentPoint = Point(x, y)
                         val currentCell = grid.getCell(currentPoint)!!
                         val activeNeighborCount = countActiveNeighbors(currentPoint)
+                        // Shuffled. Because I can ;-)
                         val nextState =
-                            RULES.find { rule -> rule.isApplicable(currentCell.isActive(), activeNeighborCount) }
+                            RULES.shuffled().find { rule -> rule.isApplicable(currentCell.isActive(), activeNeighborCount) }
                                 ?.apply()
                                 ?: currentCell.state
                         Cell(nextState)
