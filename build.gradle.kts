@@ -3,6 +3,7 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 plugins {
     kotlin("jvm") version "1.6.10"
     id("org.jlleitschuh.gradle.ktlint") version "10.2.1"
+    jacoco
     application
 }
 
@@ -15,10 +16,25 @@ repositories {
 
 dependencies {
     testImplementation(kotlin("test"))
+    testImplementation("com.willowtreeapps.assertk:assertk-jvm:0.25")
 }
 
 tasks.test {
     useJUnitPlatform()
+    finalizedBy(tasks.jacocoTestReport) // report is always generated after tests run
+}
+tasks.jacocoTestReport {
+    dependsOn(tasks.test) // tests are required to run before generating the report
+
+    classDirectories.setFrom(
+        files(
+            classDirectories.files.map {
+                fileTree(it).apply {
+                    exclude("**/MainKt*")
+                }
+            }
+        )
+    )
 }
 
 tasks.withType<KotlinCompile>() {
