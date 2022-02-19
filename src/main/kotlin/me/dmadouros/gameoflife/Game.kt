@@ -47,7 +47,7 @@ data class Game(private val grid: Grid) {
             }
         )
 
-    override fun toString() = grid.toString()
+    override fun toString(): String = grid.toString()
 
     private fun countActiveNeighbors(point: Point): Int =
         grid.getNeighbors(point)
